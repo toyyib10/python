@@ -14,8 +14,14 @@ drawFace = mp.solutions.drawing_utils
 while True:
     ignore, frame = cam.read()
     frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    result = findFace.process()
-    
+    result = findFace.process(frame)
+    if result.detections != None:
+        for face in result.detections:
+            # drawFace.draw_detection(frame,face)
+            bBox=face.location_data.relative_bounding_box;
+            pt1 = (int(bBox.xmin * width),int(bBox.ymin * height))
+            pt2 = (int((bBox.xmin + bBox.width) * width),int((bBox.ymin + bBox.height) * height))
+            cv2.rectangle(frame,pt1,pt2,(125,125,0), 2)
     cv2.imshow('my WEBcam', frame)
     cv2.moveWindow('my WEBcam',0,0)
     if cv2.waitKey(1) & 0xff == ord('q'):
